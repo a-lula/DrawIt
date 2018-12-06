@@ -13,6 +13,10 @@ const DrawSchema = new Schema({
   history: {
     type: [],
     required: false,
+  },
+  messages: {
+    type: [ [] ],
+    required: false,
   }
 });
 
