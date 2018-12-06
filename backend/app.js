@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require("mongoose");
 const config = require("./config/database");
 const cookieParser = require('cookie-parser');
+const cors = require("cors");
 const bodyParser = require('body-parser');
-
 
 /* Import Models */
 const Draw = require('./models/draw');
@@ -20,11 +20,10 @@ mongoose
 
 
 var app = express();
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-
 
 app.use('/draw', draw);
 

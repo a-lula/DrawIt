@@ -1,9 +1,72 @@
 #!/usr/bin/nodejs
 var debug = require('debug')('my-application');
 var app = require('../app');
+const socket = require('socket.io');
+/* Models */
+const Draw = require("../models/draw");
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4000);
 
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
+});
+var io = socket(server)
+
+io.sockets.on('connection',socket => {
+  socket.on('joinRoom',function(room) {
+    socket.leave(socket.room);
+    socket.join(room);
+    socket.room = room;
+    Draw.findOne({altID: room},(err,drawObj) => {
+      if (!err && drawObj && drawObj.history && drawObj.history.length > 0){
+        for(let i = 0; i < drawObj.history.length; i++){
+            socket.emit('draw',{
+              lineWidth: drawObj.history[i].lineWidth,
+              lineColor: drawObj.history[i].lineColor,
+              lineCoords: drawObj.history[i].lineCoords,
+              resolution: drawObj.history[i].resolution,
+            });
+        }
+      }
+    });
+  });
+  socket.on('draw', data => {
+    Draw.findOne({altID: data.room},(err,drawObj) => {
+      if (!err && drawObj){
+        drawObj.history.push({
+          lineWidth: data.lineWidth,
+          lineColor: data.lineColor,
+          lineCoords: data.lineCoords,
+          resolution: data.resolution
+        });
+        drawObj.save();
+      }
+    });
+      io.to(data.room).emit('draw', {
+        lineWidth: data.lineWidth,
+        lineColor: data.lineColor,
+        lineCoords: data.lineCoords,
+        resolution: data.resolution
+      });
+  });
+  socket.on('joinHistory',function(room) {
+    socket.leave(socket.room);
+    socket.join(room);
+    socket.room = room;
+  });
+  socket.on('draw_history', data => {
+    Draw.findOne({altID: data.altID},(err,drawObj) => {
+      if (!err && drawObj && drawObj.history && drawObj.history.length > 0){
+        for(let i = 0; i < ((data.hist_index > drawObj.history.length)?drawObj.history.length:data.hist_index); i++){
+          socket.emit('draw_history',{
+            lineWidth: drawObj.history[i].lineWidth,
+            lineColor: drawObj.history[i].lineColor,
+            lineCoords: drawObj.history[i].lineCoords,
+            resolution: drawObj.history[i].resolution,
+            length: drawObj.history.length,
+          });
+        }
+      }
+    });
+  });
 });
