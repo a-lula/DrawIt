@@ -27,6 +27,12 @@ io.sockets.on('connection',socket => {
               resolution: drawObj.history[i].resolution,
             });
         }
+        for(let i = 0; i < drawObj.messages.length; i++){
+          socket.emit('message',{
+            msg: drawObj.messages[i].msg,
+            name: drawObj.messages[i].name,
+          });
+      }
       }
     });
   });

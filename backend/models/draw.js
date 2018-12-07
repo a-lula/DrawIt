@@ -15,7 +15,7 @@ const DrawSchema = new Schema({
     required: false,
   },
   messages: {
-    type: [ [] ],
+    type: [],
     required: false,
   }
 });
