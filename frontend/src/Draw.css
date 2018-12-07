@@ -1,0 +1,55 @@
+
+.tool-container {
+  background: black;
+  color: white;
+  padding: 5px 10px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 5px;
+  border-radius: 3px;
+  text-align: center;
+}
+.tool-container:hover {
+  background: rgb(50, 50, 50);
+}
+.tool-container--selected {
+  background: rgb(130, 130, 130);
+}
+
+.brush-size-indicator {
+  position: relative;
+  border-radius: 50px;
+  display: block;
+  color: white;
+}
+
+.toolbox {
+  position: absolute;
+  right: 10%;
+  top: 2%;
+}
+
+.display {
+  border: 1px solid rgb(230, 230, 230);
+}
+
+.pen-size-label {
+  font-size: 15px;
+}
+.chatbox {
+  position: absolute;
+  border: 1px solid rgb(230, 230, 230);
+  width: 550px;
+  height: 500px;
+  bottom: 30px;
+  right: 20px;
+  overflow-y: scroll;
+}
+.enterline {
+  position: absolute;
+  border: 1px solid rgb(230, 230, 230);
+  width: 500px;
+  height: 18px;
+  bottom: 5px;
+  right: 20px;
+}
